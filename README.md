@@ -3,7 +3,6 @@
 Demo các phương thức tích hợp cho CSharp (ASP.NET MVC)
 
 **Phiên bản:** 1.0
-**Visual Studio:** 2017
 
 ## Cài đặt
 
