@@ -248,6 +248,7 @@
     <Content Include="Views\Quickpay\Index.cshtml" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Redirect\Index.cshtml" />
+    <Content Include="README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
