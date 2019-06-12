@@ -1,0 +1,58 @@
+﻿@using ZaloPayDemo.ZaloPay;
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ZaloPay Demo</title>
+  @Styles.Render("~/Content/css/bootstrap.min.css")
+  @Styles.Render("~/Content/css/simplePagination.css")
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <a class="navbar-brand" href="/">
+      <img src="@Url.Content("~/Content/images/logo-zalopay.svg")" alt="Logo ZaloPay" />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link @(Request.Path == "/" ? "text-primary" : "")" href="/">QR Code / Mobile Web to App</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link @(Request.Path.StartsWith("/Gateway") ? "text-primary" : "")" href="/Gateway">Gateway</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link @(Request.Path.StartsWith("/Quickpay") ? "text-primary" : "")" href="/Quickpay">Quickpay</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link @(Request.Path.StartsWith("/History") ? "text-primary" : "")" href="/History">Lịch sử</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  @if (!string.IsNullOrEmpty(NgrokHelper.PublicUrl))
+  {
+      <div class="position-absolute" style="top: 80px; left: 20px">
+        <small class="text-danger">
+          Public url: 
+          <a class="text-danger" href="@NgrokHelper.PublicUrl">
+            <u>@NgrokHelper.PublicUrl</u>
+          </a>
+        </small>
+      </div>
+  }
+
+  @RenderBody()
+  
+  @Scripts.Render("~/Scripts/jquery-3.3.1.slim.min.js")
+  @Scripts.Render("~/Scripts/bootstrap.min.js")
+  @Scripts.Render("~/Scripts/jquery.simplePagination.js")
+  @RenderSection("scripts", required: false)
+</body>
+</html>

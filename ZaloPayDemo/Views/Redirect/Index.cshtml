@@ -1,0 +1,35 @@
+﻿@{ 
+    var isValidRedirect = (bool)ViewData["isValidRedirect"];
+    var exception = ViewData["Exception"]?.ToString();
+}
+
+<div class="container mt-5">
+  @if (isValidRedirect)
+  {
+    <h4 class="text-center text-primary font-weight-bold mb-5">
+      Kết quả giao dịch
+    </h4>
+    <table class="table">
+      @foreach(var key in Request.QueryString.AllKeys)
+      {
+          <tr>
+            <td>@key</td>
+            <td>@Request.QueryString[key]</td>
+          </tr>
+      }
+    </table>
+  }
+  else
+  {
+    <div class="alert alert-danger">
+      <p class="mb-0">
+        <strong>Lỗi: </strong> Redirect không hợp lệ
+      </p>
+      @if (!string.IsNullOrEmpty(exception))
+      {
+          <p class="mb-0"><strong>Exception:</strong> @exception</p>
+      }
+    </div>
+  }
+</div>
+

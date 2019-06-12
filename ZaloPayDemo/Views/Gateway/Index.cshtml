@@ -1,0 +1,38 @@
+﻿@using ZaloPayDemo.ZaloPay.Models
+
+@{ 
+    var banklist = ViewData["banklist"] as List<BankDTO>;
+}
+
+<div class="container mt-5">
+  <h3 class="text-center text-primary my-4 font-weight-bold">Gateway</h3>
+  <form action="/Gateway/Post" method="POST">
+    <label>Thông tin thẻ test</label>
+    <ul>
+      <li><b>Số thẻ:</b> 4111111111111111</li>
+      <li><b>Tên:</b> NGUYEN VAN A</li>
+      <li><b>Ngày hết hạn:</b> 01/21</li>
+      <li><b>Mã CVV:</b> 123</li>
+    </ul>
+    <div class="form-group">
+      <label for="bankcode">Ngân hàng</label>
+      <select name="bankcode" class="form-control">
+        <option value="">Không chọn</option>
+        @foreach (var bank in banklist)
+        {
+          <option value="@bank.bankcode">@bank.name</option>
+        }
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="description">Mô tả</label>
+      <textarea type="text" class="form-control" name="description" placeholder="Nhập mô tả"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Số tiền <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" name="amount" placeholder="Nhập số tiền" value="10000">
+      <small class="form-text text-muted">Số tiền tối thiểu là 1000 VNĐ</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Thanh toán</button>
+  </form>
+</div>

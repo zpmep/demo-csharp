@@ -1,0 +1,139 @@
+﻿@using ZaloPayDemo.Models;
+
+@{
+    var orders = ViewData["orders"] as List<Order>;
+    var totalRefunds = ViewData["totalRefunds"] as List<long>;
+    var refundResult = Session["refundResult"] as Dictionary<string, object>;
+}
+
+<div class="container-fluid mt-5">
+  @if (refundResult != null)
+  {
+    var returncode = int.Parse(refundResult["returncode"].ToString());
+    
+    <div class="alert alert-@(returncode >= 1 ? "success" : "danger")">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <p class="mb-1"><b>Kết quả hoàn tiền</b></p>
+      <ul class="mb-0 pl-3">
+        @foreach(var entry in refundResult)
+        {
+            <li><b>@entry.Key</b>: @entry.Value</li>
+        }
+      </ul>
+    </div>
+
+    Session.Remove("refundResult");
+  }
+  <h3 class="text-center text-primary my-4 font-weight-bold">Lịch sử giao dịch</h3>
+  <table id="historyTable" class="table table-hover">
+    <thead>
+      <tr>
+        <th>Apptransid</th>
+        <th>Zptransid</th>
+        <th>Kênh thanh toán</th>
+        <th>Mô tả</th>
+        <th>Thời gian</th>
+        <th>Số tiền</th>
+        <th>Số tiền đã hoàn</th>
+        <th>Trạng thái</th>
+        <th>Tùy chọn</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (var i = 0; i < orders.Count; i++)
+      {
+        var order = orders[i];
+        var totalRefund = totalRefunds[i];
+        var date = new DateTime(1970, 1, 1, 7, 0, 0);
+        date = date.AddMilliseconds(order.Timestamp);
+        string formattedDate = date.ToString("dd/MM/yyyy HH:mm:ss");
+        <tr data-row id="@order.ApptransID">
+          <td width="300">@order.ApptransID</td>
+          <td width="150">@order.ZptransID</td>
+          <td width="200">@order.Channel</td>
+          <td>@order.Description</td>
+          <td width="200">@formattedDate</td>
+          <td width="100">@order.Amount</td>
+          <td width="200">@totalRefund</td>
+          <td width="150">
+            @if (order.Status == 1)
+            {
+              <span class="text-success">Thành công</span>
+            }
+            else if (order.Status == -1)
+            {
+              <span class="text-danger">Thất bại</span>
+            }
+            else
+            {
+              <span class="text-info">Đang xử lý</span>
+            }
+          </td>
+          <td width="150">
+            @if (order.Status.Equals(1))
+            {
+              <button class="btn btn-primary refund" data-zptransid="@order.ZptransID" data-max-amount="@order.Amount">Hoàn tiền</button><br />
+              <button class="btn btn-primary d-none getrefundstatus mt-2">GetRefundStatus</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav id="pagination" class="d-flex justify-content-center my-4"></nav>
+
+  <form class="modal fade" id="modal" tabindex="-1" role="dialog" action="/Refund" method="POST">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Hoàn tiền giao dịch</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <input type="hidden" id="refundZptransid" name="zptransid" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="description">Lý do hoàn tiền</label>
+            <textarea type="text" class="form-control" name="description" placeholder="Nhập lý do hoàn tiền"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="amount">Số tiền</label>
+            <input type="number" class="form-control" id="amount" name="amount" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Hoàn tiền</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+@section scripts
+{
+  <script>
+  $('#pagination').pagination({
+    items: @ViewData["totalOrder"],
+    itemsOnPage: @ViewData["orderPerPage"],
+    currentPage: @ViewData["page"],
+    cssStyle: 'light-theme',
+    nextText: '>>',
+    prevText: '<<',
+    onPageClick(page) {
+      window.location.search = 'page='+page;
+    }
+  });
+
+  $('[data-row] button.refund').click(function () {
+    const { zptransid, maxAmount } = $(this).data();
+    $('#modal').modal();
+    $('#refundZptransid').val(''+zptransid);
+    $('#amount').val(''+maxAmount).attr('max', ''+maxAmount);
+  });
+  </script>
+}
