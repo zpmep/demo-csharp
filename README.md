@@ -1,8 +1,6 @@
-﻿# zlp-demo-csharp
+﻿# Demo tích hợp ZaloPay cho C#
 
-Demo các phương thức tích hợp cho CSharp (ASP.NET MVC)
-
-**Phiên bản:** 1.0
+Demo các phương thức tích hợp cho C# (ASP.NET MVC)
 
 ## Cài đặt
 
@@ -49,4 +47,4 @@ Demo các phương thức tích hợp cho CSharp (ASP.NET MVC)
 
 ## Nhận callback ở môi trường local thông qua Ngrok
 
-* Xem thêm [ở đây](https://github.com/tiendung1510/zlp-forward-callback-proxy)
+* Xem thêm [ở đây](https://github.com/zpmep/forward-callback-proxy)
