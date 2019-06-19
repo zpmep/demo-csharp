@@ -49,9 +49,9 @@
         var date = new DateTime(1970, 1, 1, 7, 0, 0);
         date = date.AddMilliseconds(order.Timestamp);
         string formattedDate = date.ToString("dd/MM/yyyy HH:mm:ss");
-        <tr data-row id="@order.ApptransID">
-          <td width="300">@order.ApptransID</td>
-          <td width="150">@order.ZptransID</td>
+        <tr data-row id="@order.Apptransid">
+          <td width="300">@order.Apptransid</td>
+          <td width="150">@order.Zptransid</td>
           <td width="200">@order.Channel</td>
           <td>@order.Description</td>
           <td width="200">@formattedDate</td>
@@ -74,7 +74,7 @@
           <td width="150">
             @if (order.Status.Equals(1))
             {
-              <button class="btn btn-primary refund" data-zptransid="@order.ZptransID" data-max-amount="@order.Amount">Hoàn tiền</button><br />
+              <button class="btn btn-primary refund" data-zptransid="@order.Zptransid" data-max-amount="@order.Amount">Hoàn tiền</button><br />
               <button class="btn btn-primary d-none getrefundstatus mt-2">GetRefundStatus</button>
             }
           </td>

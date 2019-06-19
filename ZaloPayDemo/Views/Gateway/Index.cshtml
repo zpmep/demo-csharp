@@ -17,7 +17,7 @@
     <div class="form-group">
       <label for="bankcode">Ngân hàng</label>
       <select name="bankcode" class="form-control">
-        <option value="">Không chọn</option>
+        <option value="ATM">ATM</option>
         @foreach (var bank in banklist)
         {
           <option value="@bank.bankcode">@bank.name</option>

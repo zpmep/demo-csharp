@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using ZaloPayDemo.ZaloPay;
 using ZaloPayDemo.DAL;
-using Newtonsoft.Json;
+using ZaloPayDemo.ZaloPay.Models;
 
 namespace ZaloPayDemo.Controllers
 {
@@ -20,33 +20,41 @@ namespace ZaloPayDemo.Controllers
         [HttpPost]
         public async Task<ActionResult> Post()
         {
-            var data = new Dictionary<string, object>();
-            Request.Form.CopyTo(data);
+            var amount = long.Parse(Request.Form.Get("amount"));
+            var description = Request.Form.Get("description");
+            var embeddata = NgrokHelper.CreateEmbeddataWithPublicUrl();
+            var bankcode = Request.Form.Get("bankcode");
 
-            data["embeddata"] = NgrokHelper.CreateEmbeddataWithPublicUrl();
-
-            var orderData = ZaloPayHelper.NewCreateOrderData(data);
+            var orderData = new OrderData(amount, description, bankcode, embeddata);
             var order = await ZaloPayHelper.CreateOrder(orderData);
-            var orderurl = order["orderurl"].ToString();
 
-            using(var db = new ZaloPayDemoContext())
+            var returncode = (long)order["returncode"];
+            if (returncode == 1)
             {
-                db.Orders.Add(new Models.Order
+                using (var db = new ZaloPayDemoContext())
                 {
-                    ApptransID = orderData["apptransid"],
-                    Amount = long.Parse(orderData["amount"]),
-                    Timestamp = long.Parse(orderData["apptime"]),
-                    Description = orderData["description"],
-                    Status = 0
-                });
+                    db.Orders.Add(new Models.Order
+                    {
+                        Apptransid = orderData.Apptransid,
+                        Amount = orderData.Amount,
+                        Timestamp = orderData.Apptime,
+                        Description = orderData.Description,
+                        Status = 0
+                    });
 
-                await db.SaveChangesAsync();
+                    db.SaveChanges();
+                }
+
+                var orderurl = order["orderurl"].ToString();
+                Session["orderurl"] = orderurl;
+                Session["QRCodeBase64Image"] = QRCodeHelper.CreateQRCodeBase64Image(orderurl);
+            }
+            else
+            {
+                Session["error"] = true;
             }
 
-            ViewData["orderurl"] = orderurl;
-            ViewData["QRCodeBase64Image"] = QRCodeHelper.CreateQRCodeBase64Image(orderurl);
-
-            return View("Index");
+            return Redirect("/");
         }
     }
 }

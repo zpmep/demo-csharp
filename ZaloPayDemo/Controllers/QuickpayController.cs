@@ -5,11 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using ZaloPayDemo.ZaloPay;
+using ZaloPayDemo.ZaloPay.Models;
 using ZaloPayDemo.DAL;
 
 namespace ZaloPayDemo.Controllers
 {
-    public class QuickpayController : Controller
+    public class QuickPayController : Controller
     {
         // GET: Quickpay
         public ActionResult Index()
@@ -20,12 +21,12 @@ namespace ZaloPayDemo.Controllers
         [HttpPost]
         public async Task<ActionResult> Post()
         {
-            var data = new Dictionary<string, object>();
-            Request.Form.CopyTo(data);
+            var embeddata = NgrokHelper.CreateEmbeddataWithPublicUrl();
+            var paymentcodeRaw = Request.Form.Get("paymentcodeRaw");
+            var amount = long.Parse(Request.Form.Get("amount"));
+            var description = Request.Form.Get("description");
 
-            data["embeddata"] = NgrokHelper.CreateEmbeddataWithPublicUrl();
-
-            var orderData = ZaloPayHelper.NewQuickPayOrderData(data);
+            var orderData = new QuickPayOrderData(amount, paymentcodeRaw, description, embeddata);
             var result = await ZaloPayHelper.QuickPay(orderData);
 
             var returncode = int.Parse(result["returncode"].ToString());
@@ -36,10 +37,10 @@ namespace ZaloPayDemo.Controllers
                 {
                     db.Orders.Add(new Models.Order
                     {
-                        ApptransID = orderData["apptransid"],
-                        Amount = long.Parse(orderData["amount"]),
-                        Timestamp = long.Parse(orderData["apptime"]),
-                        Description = orderData["description"],
+                        Apptransid = orderData.Apptransid,
+                        Amount = orderData.Amount,
+                        Timestamp = orderData.Apptime,
+                        Description = orderData.Description,
                         Status = 0
                     });
 
@@ -47,9 +48,9 @@ namespace ZaloPayDemo.Controllers
                 }
             }
             
-            ViewData["result"] = result;
+            Session["result"] = result;
 
-            return View("Index");
+            return Redirect("/QuickPay");
         }
     }
 }

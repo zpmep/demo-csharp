@@ -27,7 +27,7 @@
           <a class="nav-link @(Request.Path.StartsWith("/Gateway") ? "text-primary" : "")" href="/Gateway">Gateway</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link @(Request.Path.StartsWith("/Quickpay") ? "text-primary" : "")" href="/Quickpay">Quickpay</a>
+          <a class="nav-link @(Request.Path.StartsWith("/QuickPay") ? "text-primary" : "")" href="/QuickPay">Quickpay</a>
         </li>
         <li class="nav-item">
           <a class="nav-link @(Request.Path.StartsWith("/History") ? "text-primary" : "")" href="/History">Lịch sử</a>
@@ -46,6 +46,15 @@
           </a>
         </small>
       </div>
+  }
+
+  @if (Session["error"] != null)
+  {
+      <script>
+        alert('Có lỗi xảy ra, vui lòng thử lại');
+      </script>
+
+    Session.Remove("error");
   }
 
   @RenderBody()

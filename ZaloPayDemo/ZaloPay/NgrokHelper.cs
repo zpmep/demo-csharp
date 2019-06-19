@@ -30,16 +30,16 @@ namespace ZaloPayDemo.ZaloPay
         }
 
 
-        public static string CreateEmbeddataWithPublicUrl(Dictionary<string, object> embeddata)
+        public static Dictionary<string, object> CreateEmbeddataWithPublicUrl(Dictionary<string, object> embeddata)
         {
             if (!string.IsNullOrEmpty(PublicUrl))
             {
-                embeddata["forward_callback"] = PublicUrl + "/callback";
+                embeddata["forward_callback"] = PublicUrl + "/Callback";
             }
-            return JsonConvert.SerializeObject(embeddata);
+            return embeddata;
         }
 
-        public static string CreateEmbeddataWithPublicUrl()
+        public static Dictionary<string, object> CreateEmbeddataWithPublicUrl()
         {
             return CreateEmbeddataWithPublicUrl(new Dictionary<string, object>());
         }

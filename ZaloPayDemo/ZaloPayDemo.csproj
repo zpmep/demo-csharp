@@ -194,7 +194,7 @@
     <Compile Include="Controllers\GatewayController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\QuickpayController.cs" />
+    <Compile Include="Controllers\QuickPayController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Controllers\RefundController.cs" />
     <Compile Include="DAL\ZaloPayDemoContext.cs" />
@@ -204,12 +204,16 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Refund.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZaloPay\Extension\Extension.cs" />
     <Compile Include="ZaloPay\HttpHelper.cs" />
     <Compile Include="ZaloPay\Crypto\HmacHelper.cs" />
     <Compile Include="ZaloPay\Crypto\RSAHelper.cs" />
     <Compile Include="ZaloPay\Models\BankDTO.cs" />
     <Compile Include="ZaloPay\Models\CallbackRequest.cs" />
+    <Compile Include="ZaloPay\Models\OrderData.cs" />
+    <Compile Include="ZaloPay\Models\RefundData.cs" />
     <Compile Include="ZaloPay\NgrokHelper.cs" />
+    <Compile Include="ZaloPay\Util.cs" />
     <Compile Include="ZaloPay\ZaloPayHelper.cs" />
     <Compile Include="ZaloPay\ZaloPayMacGenerator.cs" />
     <Compile Include="ZaloPay\QRCodeHelper.cs" />
@@ -245,10 +249,9 @@
     <None Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Gateway\Index.cshtml" />
-    <Content Include="Views\Quickpay\Index.cshtml" />
+    <Content Include="Views\QuickPay\Index.cshtml" />
     <Content Include="Views\History\Index.cshtml" />
     <Content Include="Views\Redirect\Index.cshtml" />
-    <Content Include="README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

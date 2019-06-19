@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using ZaloPayDemo.ZaloPay;
 using ZaloPayDemo.DAL;
+using ZaloPayDemo.ZaloPay.Models;
 
 namespace ZaloPayDemo.Controllers
 {
@@ -23,31 +24,46 @@ namespace ZaloPayDemo.Controllers
         }
 
         [HttpPost]
-        public void Post()
+        public async Task<ActionResult> Post()
         {
-            var data = new Dictionary<string, object>();
-            Request.Form.CopyTo(data);
+            var amount = long.Parse(Request.Form.Get("amount"));
+            var description = Request.Form.Get("description");
+            var bankcode = Request.Form.Get("bankcode");
+            var embeddata = NgrokHelper.CreateEmbeddataWithPublicUrl();
 
-            data["embeddata"] = NgrokHelper.CreateEmbeddataWithPublicUrl();
-            
-            var orderData = ZaloPayHelper.NewCreateOrderData(data);
-            var orderurl = ZaloPayHelper.Gateway(orderData);
-
-            using (var db = new ZaloPayDemoContext())
+            if (bankcode.Equals("ATM"))
             {
-                db.Orders.Add(new Models.Order
-                {
-                    ApptransID = orderData["apptransid"],
-                    Amount = long.Parse(orderData["amount"]),
-                    Timestamp = long.Parse(orderData["apptime"]),
-                    Description = orderData["description"],
-                    Status = 0
-                });
-
-                db.SaveChanges();
+                embeddata["bankgroup"] = "ATM";
+                bankcode = "";
             }
 
-            Response.Redirect(orderurl);
+            var orderData = new OrderData(amount, description, bankcode, embeddata);
+            var order = await ZaloPayHelper.CreateOrder(orderData);
+            var returncode = (long)order["returncode"];
+
+            if (returncode == 1)
+            {
+                using (var db = new ZaloPayDemoContext())
+                {
+                    db.Orders.Add(new Models.Order
+                    {
+                        Apptransid = orderData.Apptransid,
+                        Amount = orderData.Amount,
+                        Timestamp = orderData.Apptime,
+                        Description = orderData.Description,
+                        Status = 0
+                    });
+
+                    db.SaveChanges();
+                }
+
+                return Redirect(order["orderurl"].ToString());
+            }
+            else
+            {
+                Session["error"] = true;
+                return Redirect("/Gateway");
+            }
         }
     }
 }

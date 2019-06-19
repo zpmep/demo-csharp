@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using ZaloPayDemo.ZaloPay;
 using ZaloPayDemo.DAL;
 using System.Threading.Tasks;
+using ZaloPayDemo.ZaloPay.Models;
 
 namespace ZaloPayDemo.Controllers
 {
@@ -19,7 +20,11 @@ namespace ZaloPayDemo.Controllers
                 var data = new Dictionary<string, object>();
                 Request.Form.CopyTo(data);
 
-                var refundData = ZaloPayHelper.NewRefundData(data);
+                var amount = long.Parse(Request.Form.Get("amount"));
+                var zptransid = Request.Form.Get("zptransid");
+                var description = Request.Form.Get("description");
+
+                var refundData = new RefundData(amount, zptransid, description);
                 var result = await ZaloPayHelper.Refund(refundData);
 
                 var returncode = int.Parse(result["returncode"].ToString());
@@ -28,7 +33,7 @@ namespace ZaloPayDemo.Controllers
                 {
                     while (true)
                     {
-                        var refundStatus = await ZaloPayHelper.GetRefundStatus(refundData["mrefundid"]);
+                        var refundStatus = await ZaloPayHelper.GetRefundStatus(refundData.Mrefundid);
                         var c = int.Parse(refundStatus["returncode"].ToString());
 
                         if (c < 2)
@@ -39,9 +44,9 @@ namespace ZaloPayDemo.Controllers
                                 {
                                     db.Refunds.Add(new Models.Refund
                                     {
-                                        Amount = long.Parse(refundData["amount"]),
-                                        ZptransID = refundData["zptransid"].ToString(),
-                                        MrefundID = refundData["mrefundid"].ToString()
+                                        Amount = refundData.Amount,
+                                        Zptransid = refundData.Zptransid,
+                                        Mrefundid = refundData.Mrefundid
                                     });
 
                                     db.SaveChanges();

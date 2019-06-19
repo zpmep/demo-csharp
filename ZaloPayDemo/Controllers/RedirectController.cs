@@ -27,13 +27,13 @@ namespace ZaloPayDemo.Controllers
                     var apptransid = data["apptransid"].ToString();
                     using (var db = new ZaloPayDemoContext())
                     {
-                        var orderDTO = db.Orders.First(o => o.ApptransID.Equals(apptransid));
+                        var orderDTO = db.Orders.First(o => o.Apptransid.Equals(apptransid));
                         if (orderDTO != null && orderDTO.Status == 0)
                         {
                             var orderStatus = await ZaloPayHelper.GetOrderStatus(apptransid);
                             var returncode = int.Parse(orderStatus["returncode"].ToString());
 
-                            orderDTO.ZptransID = orderStatus["zptransid"].ToString();
+                            orderDTO.Zptransid = orderStatus["zptransid"].ToString();
                             orderDTO.Channel = int.Parse(orderStatus["pmcid"].ToString());
                             orderDTO.Status = returncode == 1 ? 1 : -1;
                         }

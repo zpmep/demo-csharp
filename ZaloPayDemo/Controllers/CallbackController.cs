@@ -39,10 +39,10 @@ namespace ZaloPayDemo.Controllers
 
                     using(var db = new ZaloPayDemoContext())
                     {
-                        var orderDTO = db.Orders.SingleOrDefault(o => o.ApptransID.Equals(apptransid));
+                        var orderDTO = db.Orders.SingleOrDefault(o => o.Apptransid.Equals(apptransid));
                         if (orderDTO != null)
                         {
-                            orderDTO.ZptransID = data["zptransid"].ToString();
+                            orderDTO.Zptransid = data["zptransid"].ToString();
                             orderDTO.Channel = int.Parse(data["channel"].ToString());
                             orderDTO.Status = 1;
 

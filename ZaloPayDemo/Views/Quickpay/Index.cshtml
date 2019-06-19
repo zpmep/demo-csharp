@@ -1,9 +1,9 @@
 ﻿<div class="container mt-5">
   <h3 class="text-center text-primary my-4 font-weight-bold">Quickpay</h3>
   <form action="/Quickpay/Post" method="POST">
-    @if (ViewData.ContainsKey("result"))
+    @if (Session["result"] != null)
     {
-      var result = ViewData["result"] as Dictionary<string, object>;
+      var result = Session["result"] as Dictionary<string, object>;
       var returncode = (long)result["returncode"];
       var returnmessage = result["returnmessage"].ToString();
 

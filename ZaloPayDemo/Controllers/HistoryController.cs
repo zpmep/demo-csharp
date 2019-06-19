@@ -29,8 +29,8 @@ namespace ZaloPayDemo.Controllers
                 var ors = db.Orders
                     .GroupJoin(
                         db.Refunds,
-                        order => order.ZptransID,
-                        refund => refund.ZptransID,
+                        order => order.Zptransid,
+                        refund => refund.Zptransid,
                         (order, refunds) => new { Order = order, Refunds = refunds })
                     .SelectMany(
                         o => o.Refunds.DefaultIfEmpty(),
@@ -41,8 +41,8 @@ namespace ZaloPayDemo.Controllers
                     .ToList();
 
                 var totalOrder = db.Orders.Count();
-                var orders = ors.GroupBy(o => o.Order.ApptransID).Select(g => g.First().Order).ToList();
-                var totalRefunds = ors.GroupBy(o => o.Order.ApptransID).Select(g => g.Sum(o => o.Refund != null ? o.Refund.Amount : 0)).ToList();
+                var orders = ors.GroupBy(o => o.Order.Apptransid).Select(g => g.First().Order).ToList();
+                var totalRefunds = ors.GroupBy(o => o.Order.Apptransid).Select(g => g.Sum(o => o.Refund != null ? o.Refund.Amount : 0)).ToList();
 
                 ViewData["orders"] = orders;
                 ViewData["totalRefunds"] = totalRefunds;
