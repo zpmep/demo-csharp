@@ -48,6 +48,7 @@ namespace ZaloPayDemo.Controllers
                 var orderurl = order["orderurl"].ToString();
                 Session["orderurl"] = orderurl;
                 Session["QRCodeBase64Image"] = QRCodeHelper.CreateQRCodeBase64Image(orderurl);
+                Session["apptransid"] = orderData.Apptransid;
             }
             else
             {

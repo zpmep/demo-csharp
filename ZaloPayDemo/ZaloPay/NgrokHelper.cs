@@ -34,7 +34,7 @@ namespace ZaloPayDemo.ZaloPay
         {
             if (!string.IsNullOrEmpty(PublicUrl))
             {
-                embeddata["forward_callback"] = PublicUrl + "/Callback";
+                embeddata["callbackurl"] = PublicUrl + "/Callback";
             }
             return embeddata;
         }

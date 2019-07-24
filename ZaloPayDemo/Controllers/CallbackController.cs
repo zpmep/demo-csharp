@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using ZaloPayDemo.ZaloPay;
 using ZaloPayDemo.ZaloPay.Models;
 using ZaloPayDemo.DAL;
+using ZaloPayDemo.Utils;
 
 namespace ZaloPayDemo.Controllers
 {
@@ -52,6 +53,8 @@ namespace ZaloPayDemo.Controllers
 
                     result["returncode"] = 1;
                     result["returnmessage"] = "success";
+
+                    Storage.Set(apptransid, data);
                 }
 
                 // thông báo kết quả cho zalopay server
