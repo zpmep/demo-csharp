@@ -28,6 +28,7 @@ namespace ZaloPayDemo.ZaloPay.Models
             Apptime = Util.GetTimeStamp();
             Appuser = appuser;
             Amount = amount;
+            Bankcode = bankcode;
             Description = description;
             Embeddata = JsonConvert.SerializeObject(embeddata);
             Item = JsonConvert.SerializeObject(item);
