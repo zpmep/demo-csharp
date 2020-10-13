@@ -30,7 +30,7 @@ namespace ZaloPayDemo.ZaloPay.Crypto
             //Finally, do your encryption:
             byte[] dataToEncrypt = Encoding.UTF8.GetBytes(data);
             // Sign data with Pkcs1
-            byte[] encryptedData = rsa.Encrypt(dataToEncrypt, true);
+            byte[] encryptedData = rsa.Encrypt(dataToEncrypt, false);
             // Convert Bytes to Hash
             var hash = Convert.ToBase64String(encryptedData);
 
@@ -56,6 +56,7 @@ namespace ZaloPayDemo.ZaloPay.Crypto
         {
             RSACryptoServiceProvider publicKey = (RSACryptoServiceProvider)cert.PublicKey.Key;
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
+            
             byte[] encryptedBytes = publicKey.Encrypt(plainBytes, false);
             string encryptedText = Convert.ToBase64String(encryptedBytes);
             return encryptedText;
